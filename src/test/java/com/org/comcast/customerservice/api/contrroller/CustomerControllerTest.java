@@ -20,6 +20,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
     /*
     What is @MockBean?
     Annotation  used to add mocks to a Spring ApplicationContext.
@@ -52,17 +56,17 @@ public class CustomerControllerTest {
         CustomerDTO customerDTO = CustomerDTO.builder().customerId(979054L).customerName("RaghuWithBody").activationStatus(true).gender("Male").build();
         String content = new ObjectMapper().writeValueAsString(customerDTO);
         Customer savedCustomer = Customer.builder().customerId(979054L).customerName("RaghuWithBody").activationStatus(true).gender("Male").build();
-        Mockito.when(customerService.save(Mockito.any(Customer.class))).thenReturn(savedCustomer); // step 2 of this stage; create classes with help of IDE
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(URI)// Ctrl+Alt+V to create variable with correct Type
+        when(customerService.save(any(Customer.class))).thenReturn(savedCustomer); // step 2 of this stage; create classes with help of IDE
+        MockHttpServletRequestBuilder requestBuilder = post(URI)// Ctrl+Alt+V to create variable with correct Type
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isCreated())// we can use static import for readability
-                .andExpect(MockMvcResultMatchers.jsonPath("customerId").value(979054L))
-                .andExpect(MockMvcResultMatchers.jsonPath("customerName").value("RaghuWithBody"))
-                .andExpect(MockMvcResultMatchers.jsonPath("activationStatus").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("gender").value("Male"));
+                .andExpect(status().isCreated())// we can use static import for readability
+                .andExpect(jsonPath("customerId").value(979054L))
+                .andExpect(jsonPath("customerName").value("RaghuWithBody"))
+                .andExpect(jsonPath("activationStatus").value(true))
+                .andExpect(jsonPath("gender").value("Male"));
 
 
     }
