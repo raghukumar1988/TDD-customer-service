@@ -2,18 +2,22 @@ package com.org.comcast.customerservice.api.controller;
 
 import com.org.comcast.customerservice.api.dto.CustomerDTO;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/customers")  // TDD Added this mapping to fix http 404 error
 public class CustomerController {
 
-    @RequestMapping("/createCustomer")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CustomerDTO createCustomer() {
-        return CustomerDTO.builder().customerId(979053L).customerName("Raghu").activationStatus(true).gender("Male").build();
+    @ResponseStatus(HttpStatus.CREATED)   // TDD added this line to match expected http 201
+    @PostMapping("/createCustomer")  // TDD Added this mapping to fix http 404 error
+    public CustomerDTO createCustomer(@RequestBody CustomerDTO customerDTO) {
+        return CustomerDTO // building response from RequestBody
+                .builder()
+                .customerId(customerDTO.getCustomerId())
+                .customerName(customerDTO.getCustomerName())
+                .activationStatus(customerDTO.isActivationStatus())
+                .gender(customerDTO.getGender())
+                .build();
     }
 
 }
